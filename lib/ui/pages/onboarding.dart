@@ -32,164 +32,167 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        PageView.builder(
-          physics: const NeverScrollableScrollPhysics(),
-          controller: _controller,
-          itemCount: pages.length,
-          onPageChanged: (value) {
-            setState(() {
-              _currentPage = value;
-            });
-          },
-          itemBuilder: (context, index) {
-            return OnboardPageBuilder(index: index);
-          },
-        ),
-        Stack(
-          alignment: Alignment.bottomRight,
-          clipBehavior: Clip.none,
-          children: [
-            Positioned(
-              bottom: 0,
-              child: Stack(
-                alignment: Alignment.center,
-                children: [
-                  Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 5),
-                    height: ContextVariables.height(context) / 3.6,
-                    width: ContextVariables.width(context) - 10,
-                    decoration: const BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [Colors.red, Colors.blue],
-                      ),
-                      borderRadius:
-                          BorderRadius.vertical(top: Radius.circular(40.0)),
-                    ),
-                  ),
-                  Positioned(
-                    bottom: 0,
-                    child: Container(
-                      height: ContextVariables.height(context) / 3.8,
-                      width: ContextVariables.width(context),
-                      padding: const EdgeInsets.all(30.0),
-                      constraints: BoxConstraints(
-                        maxWidth: ContextVariables.width(context),
-                      ),
+    return Scaffold(
+      body: Stack(
+        children: [
+          PageView.builder(
+            physics: const NeverScrollableScrollPhysics(),
+            controller: _controller,
+            itemCount: pages.length,
+            onPageChanged: (value) {
+              setState(() {
+                _currentPage = value;
+              });
+            },
+            itemBuilder: (context, index) {
+              return OnboardPageBuilder(index: index);
+            },
+          ),
+          Stack(
+            alignment: Alignment.bottomRight,
+            clipBehavior: Clip.none,
+            children: [
+              Positioned(
+                bottom: 0,
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 5),
+                      height: ContextVariables.height(context) / 3.3,
+                      width: ContextVariables.width(context) - 10,
                       decoration: const BoxDecoration(
-                        borderRadius:
-                            BorderRadius.vertical(top: Radius.circular(30.0)),
                         gradient: LinearGradient(
-                          colors: [Colors.black87, Colors.black],
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
+                          colors: [Colors.red, Colors.blue],
+                        ),
+                        borderRadius:
+                            BorderRadius.vertical(top: Radius.circular(40.0)),
+                      ),
+                    ),
+                    Positioned(
+                      bottom: 0,
+                      child: Container(
+                        height: ContextVariables.height(context) / 3.5,
+                        width: ContextVariables.width(context),
+                        padding: const EdgeInsets.all(30.0),
+                        constraints: BoxConstraints(
+                          maxWidth: ContextVariables.width(context),
+                        ),
+                        decoration: const BoxDecoration(
+                          borderRadius:
+                              BorderRadius.vertical(top: Radius.circular(30.0)),
+                          gradient: LinearGradient(
+                            colors: [Colors.black87, Colors.black],
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                          ),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text('${_currentPage+1} / 3', style: TextStyle(color: Colors.white54, fontSize: 14),),
+                            Text(pages[_currentPage].title,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .titleLarge
+                                    ?.copyWith(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w900,
+                                      fontSize: 30.0,
+                                    ),
+                                textAlign: TextAlign.center),
+                            const SizedBox(height: 10.0),
+                            Text(
+                              pages[_currentPage].subtitle,
+                              style:
+                                  Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                              // textAlign: TextAlign.center,
+                            ),
+                            const SizedBox(height: 10.0),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Container(
+                                  decoration: const BoxDecoration(
+                                    color: Colors.white,
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: IconButton(
+                                    onPressed: () {
+                                      _controller?.previousPage(
+                                          duration:
+                                              const Duration(milliseconds: 500),
+                                          curve: Curves.easeInOut);
+                                    },
+                                    icon: const Icon(Remix.arrow_left_s_line),
+                                  ),
+                                ),
+                                const SizedBox(
+                                  width: 10.0,
+                                ),
+                                pages[_currentPage].isLastPage
+                                    ? ElevatedButton(
+                                        onPressed: () {
+                                          Navigator.pushNamed(
+                                              context, HomePage.routeName);
+                                        },
+                                        style: ElevatedButton.styleFrom(
+                                            shape: const StadiumBorder(),
+                                            foregroundColor: Colors.black,
+                                            padding: const EdgeInsets.symmetric(
+                                                vertical: 15.0,
+                                                horizontal: 20.0),),
+                                        child: const Text(
+                                          'Get Started',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,),
+                                        ),
+                                      )
+                                    : Container(
+                                        decoration: const BoxDecoration(
+                                          color: Colors.white,
+                                          shape: BoxShape.circle,
+                                        ),
+                                        child: IconButton(
+                                          onPressed: () {
+                                            _controller?.nextPage(
+                                                duration: const Duration(
+                                                    milliseconds: 500),
+                                                curve: Curves.easeInOut);
+                                          },
+                                          icon: const Icon(
+                                              Remix.arrow_right_s_line),
+                                        ),
+                                      ),
+                              ],
+                            )
+                          ],
                         ),
                       ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(pages[_currentPage].title,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .titleLarge
-                                  ?.copyWith(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.w900,
-                                    fontSize: 30.0,
-                                  ),
-                              textAlign: TextAlign.center),
-                          const SizedBox(height: 10.0),
-                          Text(
-                            pages[_currentPage].subtitle,
-                            style:
-                                Theme.of(context).textTheme.bodyLarge?.copyWith(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                            // textAlign: TextAlign.center,
-                          ),
-                          const SizedBox(height: 10.0),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              Container(
-                                decoration: const BoxDecoration(
-                                  color: Colors.white,
-                                  shape: BoxShape.circle,
-                                ),
-                                child: IconButton(
-                                  onPressed: () {
-                                    _controller?.previousPage(
-                                        duration:
-                                            const Duration(milliseconds: 500),
-                                        curve: Curves.easeInOut);
-                                  },
-                                  icon: const Icon(Remix.arrow_left_s_line),
-                                ),
-                              ),
-                              const SizedBox(
-                                width: 10.0,
-                              ),
-                              pages[_currentPage].isLastPage
-                                  ? ElevatedButton(
-                                      onPressed: () {
-                                        Navigator.pushNamed(
-                                            context, HomePage.routeName);
-                                      },
-                                      style: ElevatedButton.styleFrom(
-                                          shape: const StadiumBorder(),
-                                          foregroundColor: Colors.black,
-                                          padding: const EdgeInsets.symmetric(
-                                              vertical: 15.0,
-                                              horizontal: 20.0),),
-                                      child: const Text(
-                                        'Get Started',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold,),
-                                      ),
-                                    )
-                                  : Container(
-                                      decoration: const BoxDecoration(
-                                        color: Colors.white,
-                                        shape: BoxShape.circle,
-                                      ),
-                                      child: IconButton(
-                                        onPressed: () {
-                                          _controller?.nextPage(
-                                              duration: const Duration(
-                                                  milliseconds: 500),
-                                              curve: Curves.easeInOut);
-                                        },
-                                        icon: const Icon(
-                                            Remix.arrow_right_s_line),
-                                      ),
-                                    ),
-                            ],
-                          )
-                        ],
-                      ),
                     ),
-                  ),
-                ],
-              ),
-            ),
-            Positioned(
-              bottom: ContextVariables.height(context) / 4.4,
-              right: 30,
-              child: Transform.rotate(
-                angle: 10 * math.pi / 180,
-                child: Icon(
-                  pages[_currentPage].icon,
-                  size: 80.0,
-                  color: Colors.white,
+                  ],
                 ),
               ),
-            ),
-          ],
-        ),
-      ],
+              Positioned(
+                bottom: ContextVariables.height(context) / 4.1,
+                right: 30,
+                child: Transform.rotate(
+                  angle: 10 * math.pi / 180,
+                  child: Icon(
+                    pages[_currentPage].icon,
+                    size: 80.0,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }
