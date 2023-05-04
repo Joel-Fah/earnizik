@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:iconly/iconly.dart';
 import 'dart:math';
 
 import 'package:loading_animation_widget/loading_animation_widget.dart';

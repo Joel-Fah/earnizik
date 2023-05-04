@@ -2,7 +2,10 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:earnizik/models/music.dart';
 import 'package:earnizik/ui/components/helper.dart';
 import 'package:flutter/material.dart';
+import 'package:iconly/iconly.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:remixicon/remixicon.dart';
+import 'dart:math' as math;
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -68,22 +71,25 @@ class _HomePageState extends State<HomePage> {
 
     final kBottomNavBarItems = <BottomNavigationBarItem>[
       const BottomNavigationBarItem(
-          icon: Icon(Remix.home_3_line),
-          label: 'Home',
-          activeIcon: Icon(Remix.home_3_fill),),
-      const BottomNavigationBarItem(
-          icon: Icon(Remix.music_2_line),
-          label: 'Rewards',
-          activeIcon: Icon(Remix.music_2_fill),
+        icon: Icon(Remix.home_3_line),
+        label: 'Home',
+        activeIcon: Icon(Remix.home_3_fill),
       ),
       const BottomNavigationBarItem(
-          icon: Icon(Remix.search_2_line),
-          label: 'Search',
-          activeIcon: Icon(Remix.home_3_fill),),
+        icon: Icon(Remix.music_2_line),
+        label: 'Rewards',
+        activeIcon: Icon(Remix.music_2_fill),
+      ),
       const BottomNavigationBarItem(
-          icon: Icon(Remix.heart_3_line),
-          label: 'Favorites',
-          activeIcon: Icon(Remix.heart_3_fill),),
+        icon: Icon(Remix.search_2_line),
+        label: 'Search',
+        activeIcon: Icon(Remix.home_3_fill),
+      ),
+      const BottomNavigationBarItem(
+        icon: Icon(Remix.heart_3_line),
+        label: 'Favorites',
+        activeIcon: Icon(Remix.heart_3_fill),
+      ),
     ];
     assert(kTabPages.length == kBottomNavBarItems.length);
 
@@ -149,8 +155,37 @@ class HomeTab extends StatelessWidget {
               Music musicItem = musics[index];
               return CachedNetworkImage(
                 imageUrl: musicItem.authorImage,
-                placeholder: placeholder,
-                errorWidget: errorWidget,
+                placeholder: (context, url) => ClipPath(
+                  clipper: PolygonClipper(),
+                  child: Container(
+                    height: 100,
+                    width: 100,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).primaryColor,
+                    ),
+                    child: LoadingAnimationWidget.threeRotatingDots(
+                      color: const Color(0xFFF1E0D9),
+                      size: 25.0,
+                    ),
+                  ),
+                ),
+                errorWidget: (context, url, error) => ClipPath(
+                  clipper: PolygonClipper(),
+                  child: Container(
+                    height: 100,
+                    width: 100,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).primaryColor,
+                    ),
+                    child: const Icon(
+                      Remix.music_2_line,
+                      size: 30,
+                      color: Color(0xFFF1E0D9),
+                    ),
+                  ),
+                ),
                 imageBuilder: (context, imageProvider) {
                   return SizedBox(
                     height: 100,
@@ -187,7 +222,10 @@ class HomeTab extends StatelessWidget {
             scrollDirection: Axis.horizontal,
             itemBuilder: (context, index) {
               Music musicItem = musics[index];
-              return MusicCard(musicItem: musicItem);
+              return MusicCard(
+                musicItem: musicItem,
+                errorIcon: IconlyBroken.star,
+              );
             },
             separatorBuilder: (context, index) => const SizedBox(
               width: 10.0,
@@ -209,7 +247,11 @@ class HomeTab extends StatelessWidget {
             scrollDirection: Axis.horizontal,
             itemBuilder: (context, index) {
               Music musicItem = musics.reversed.toList()[index];
-              return MusicCard(musicItem: musicItem);
+              return MusicCard(
+                musicItem: musicItem,
+                errorIcon: IconlyBroken.play,
+                errorIconAngle: 0,
+              );
             },
             separatorBuilder: (context, index) => const SizedBox(
               width: 10.0,
@@ -231,7 +273,11 @@ class HomeTab extends StatelessWidget {
             scrollDirection: Axis.horizontal,
             itemBuilder: (context, index) {
               Music musicItem = musics[index];
-              return MusicCard(musicItem: musicItem);
+              return MusicCard(
+                musicItem: musicItem,
+                errorIcon: IconlyBroken.voice_2,
+                errorIconAngle: 0,
+              );
             },
             separatorBuilder: (context, index) => const SizedBox(
               width: 10.0,
@@ -247,23 +293,51 @@ class MusicCard extends StatelessWidget {
   const MusicCard({
     super.key,
     required this.musicItem,
+    this.errorIconAngle,
+    required this.errorIcon,
   });
 
   final Music musicItem;
+  final double? errorIconAngle;
+  final IconData errorIcon;
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: ContextVariables.width(context) / 2.4,
+      width: ContextVariables.width(context) / 2.3,
       child: Column(
         children: [
           CachedNetworkImage(
             imageUrl: musicItem.cover,
-            placeholder: placeholder,
-            errorWidget: errorWidget,
+            placeholder: (context, url) => Container(
+              decoration: BoxDecoration(
+                border: Border(
+                  left: BorderSide(color: Theme.of(context).primaryColor),
+                  top: BorderSide(color: Theme.of(context).primaryColor),
+                  right: BorderSide(color: Theme.of(context).primaryColor),
+                )
+              ),
+              width: ContextVariables.width(context) / 2,
+              height: ContextVariables.height(context) / 5.1,
+              child: placeholder(context, url),
+            ),
+            errorWidget: (context, url, error) => Container(
+              clipBehavior: Clip.hardEdge,
+              width: ContextVariables.width(context) / 2,
+              height: ContextVariables.height(context) / 5.1,
+              decoration: BoxDecoration(color: Theme.of(context).primaryColor),
+              child: Transform.rotate(
+                angle: errorIconAngle ?? 90 * math.pi / 180,
+                child: Icon(
+                  errorIcon,
+                  color: const Color(0xFFF1E0D9),
+                  size: 210.0,
+                ),
+              ),
+            ),
             imageBuilder: (context, imageProvider) => Container(
               width: ContextVariables.width(context) / 2,
-              height: 150,
+              height: ContextVariables.height(context) / 5.1,
               decoration: BoxDecoration(
                 image: DecorationImage(
                   image: imageProvider,
@@ -284,24 +358,34 @@ class MusicCard extends StatelessWidget {
                 style: Theme.of(context).textTheme.titleLarge,
               ),
               subtitle: Text(musicItem.authorName),
-              trailing: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  musicItem.isLiked
-                      ? Icon(
-                          Remix.heart_3_fill,
-                          color: Theme.of(context).primaryColor,
-                        )
-                      : const Icon(Remix.heart_3_line),
-                  Text(
-                    musicItem.type,
-                    style: TextStyle(
+              trailing: musicItem.isLiked
+                  ? Icon(
+                      Remix.heart_3_fill,
                       color: Theme.of(context).primaryColor,
+                      size: 30.0,
+                    )
+                  : const Icon(
+                      Remix.heart_3_line,
+                      size: 30.0,
                     ),
-                  )
-                ],
-              ),
+              // Column(
+              //   mainAxisSize: MainAxisSize.min,
+              //   crossAxisAlignment: CrossAxisAlignment.end,
+              //   children: [
+              //     musicItem.isLiked
+              //         ? Icon(
+              //             Remix.heart_3_fill,
+              //             color: Theme.of(context).primaryColor,
+              //           )
+              //         : const Icon(Remix.heart_3_line),
+              //     Text(
+              //       musicItem.type,
+              //       style: TextStyle(
+              //         color: Theme.of(context).primaryColor,
+              //       ),
+              //     )
+              //   ],
+              // ),
             ),
           )
         ],
