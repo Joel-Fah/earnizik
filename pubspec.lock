@@ -352,14 +352,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.4"
-  polygon_clipper:
-    dependency: "direct main"
-    description:
-      name: polygon_clipper
-      sha256: "2e4c67162d8289e169c57b0f06e4a6258bc350cc3bfce9d2d8b3497bab9c8c27"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.2"
   process:
     dependency: transitive
     description:

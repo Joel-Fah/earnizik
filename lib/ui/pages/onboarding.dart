@@ -36,7 +36,7 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
       body: Stack(
         children: [
           PageView.builder(
-            physics: const NeverScrollableScrollPhysics(),
+            // physics: const NeverScrollableScrollPhysics(),
             controller: _controller,
             itemCount: pages.length,
             onPageChanged: (value) {
@@ -91,7 +91,13 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Text('${_currentPage+1} / 3', style: TextStyle(color: Colors.white54, fontSize: 14),),
+                            Text(
+                              '${_currentPage + 1} / 3',
+                              style: const TextStyle(
+                                color: Colors.white54,
+                                fontSize: 14,
+                              ),
+                            ),
                             Text(pages[_currentPage].title,
                                 style: Theme.of(context)
                                     .textTheme
@@ -105,11 +111,13 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
                             const SizedBox(height: 10.0),
                             Text(
                               pages[_currentPage].subtitle,
-                              style:
-                                  Theme.of(context).textTheme.bodyLarge?.copyWith(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold,
-                                      ),
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyLarge
+                                  ?.copyWith(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                               // textAlign: TextAlign.center,
                             ),
                             const SizedBox(height: 10.0),
@@ -137,19 +145,19 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
                                 pages[_currentPage].isLastPage
                                     ? ElevatedButton(
                                         onPressed: () {
-                                          Navigator.pushNamed(
-                                              context, HomePage.routeName);
+                                          Navigator.pushNamedAndRemoveUntil(context, HomePage.routeName, (route) => false,);
                                         },
                                         style: ElevatedButton.styleFrom(
-                                            shape: const StadiumBorder(),
-                                            foregroundColor: Colors.black,
-                                            padding: const EdgeInsets.symmetric(
-                                                vertical: 15.0,
-                                                horizontal: 20.0),),
+                                          shape: const StadiumBorder(),
+                                          foregroundColor: Colors.black,
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 15.0, horizontal: 20.0),
+                                        ),
                                         child: const Text(
                                           'Get Started',
                                           style: TextStyle(
-                                              fontWeight: FontWeight.bold,),
+                                            fontWeight: FontWeight.bold,
+                                          ),
                                         ),
                                       )
                                     : Container(
@@ -160,12 +168,14 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
                                         child: IconButton(
                                           onPressed: () {
                                             _controller?.nextPage(
-                                                duration: const Duration(
-                                                    milliseconds: 500),
-                                                curve: Curves.easeInOut);
+                                              duration: const Duration(
+                                                  milliseconds: 500),
+                                              curve: Curves.easeInOut,
+                                            );
                                           },
                                           icon: const Icon(
-                                              Remix.arrow_right_s_line),
+                                            Remix.arrow_right_s_line,
+                                          ),
                                         ),
                                       ),
                               ],

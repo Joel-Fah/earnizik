@@ -1,3 +1,4 @@
+import 'package:earnizik/ui/components/palette.dart';
 import 'package:earnizik/ui/pages/home.dart';
 import 'package:earnizik/ui/pages/onboarding.dart';
 import 'package:earnizik/ui/pages/splash.dart';
@@ -12,10 +13,10 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Earnizik',
       theme: ThemeData(
-        useMaterial3: true,
         textTheme: GoogleFonts.poppinsTextTheme(),
+        primarySwatch: Palette.myPaletteDark
       ),
-      initialRoute: SplashScreen.routeName,
+      initialRoute: HomePage.routeName,
       onGenerateRoute: (settings) {
         return MaterialPageRoute(
           settings: settings,
@@ -23,7 +24,7 @@ class MyApp extends StatelessWidget {
             switch (settings.name) {
               case OnBoardingPage.routeName: return const OnBoardingPage();
               case HomePage.routeName: return const HomePage();
-              default: return const SplashScreen();
+              default: return const HomePage();
             }
           }
         );

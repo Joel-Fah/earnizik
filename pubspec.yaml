@@ -38,7 +38,6 @@ dependencies:
   google_fonts: ^4.0.4
   iconly: ^1.0.1
   remixicon: ^1.0.0
-  polygon_clipper: ^1.0.2
   just_audio: ^0.9.32
   flutter_lyric: ^2.0.4+6
   cached_network_image: ^3.2.3
